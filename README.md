@@ -11,45 +11,94 @@ Questo sistema esegue backup compressi della cartella `/home/"utente"` e li salv
 
 ---
 
-Questo comando permette di creare una cartella directory backup nella cartella opt
-sudo mkdir -p /opt/backup
+## Creazione della directory di destinazione
 
-Crea un file di tipo script bash nella directory backup chiamato backup_home.sh
+```bash
+sudo mkdir -p /opt/backup
+```
+
+## Creazione dello script `backup_home.sh`
+
+```bash
 sudo nano /opt/backup/backup_home.sh
+```
 
 Incollare questo script:
+
+```bash
 #!/bin/bash
 
-# Cartella da salvare
+# Cartella da salvare  
 SOURCE="/home/xiaolong"
 
-# Cartella di destinazione backup
+# Cartella di destinazione backup  
 DEST="/opt/backup"
 
-# Data odierna per nome file (YYYY-MM-DD)
+# Data odierna per nome file (YYYY-MM-DD-HHMMSS)  
 DATA=$(date +%F-%H%M%S)   # Data + ora + minuti + secondi
 
-# Nome file backup
+# Nome file backup  
 FILE="backup-$DATA.tar.gz"
 
-# Crea la cartella di destinazione se non esiste
+# Crea la cartella di destinazione se non esiste  
 mkdir -p "$DEST"
 
-# Crea il backup compressato
+# Crea il backup compressato  
 tar -czf "$DEST/$FILE" "$SOURCE"
 
-# Mantieni solo gli ultimi 7 backup
+# Mantieni solo gli ultimi 7 backup  
 cd "$DEST" || exit
 ls -1tr backup-*.tar.gz | head -n -7 | xargs -r rm --
+```
 
-Rendere il file  backup_home.sh eseguibile
+## Rendere eseguibile lo script
+
+```bash
 sudo chmod +x /opt/backup/backup_home.sh
+```
 
-Quando digiti sudo crontab -e, stai aprendo il file crontab per l’utente root, quindi potrai programmare comandi che verranno eseguiti con i privilegi di amministratore.
+## Programmazione automatica tramite `cron`
+
+Apri il file crontab dell’utente root:
+
+```bash
 sudo crontab -e
+```
 
-All’interno del  file che si apre scrivere la riga sotto cosi eseguirà ogni giorno alle 23:59: 
+Aggiungi una delle seguenti righe:
+
+### Backup ogni giorno alle 23:59:
+
+```cron
 59 23 * * * /opt/backup/backup_home.sh >> /opt/backup/backup.log 2>&1
+```
 
-oppure la riga sotto che serve per creare il backup ogni minuto per vedere se funziona:
+### Backup ogni minuto (per test):
+
+```cron
 * * * * * /opt/backup/backup_home.sh >> /opt/backup/backup.log 2>&1
+```
+
+---
+
+## Log
+
+L’output del backup (inclusi eventuali errori) viene registrato in:
+
+```
+/opt/backup/backup.log
+```
+
+---
+
+## Pulizia automatica
+
+Il sistema conserva **solo gli ultimi 7 file di backup**.
+
+---
+
+## Autore
+
+Chen Xiaolong  
+ITS ICT Torino – Corso SWD  
+2025
