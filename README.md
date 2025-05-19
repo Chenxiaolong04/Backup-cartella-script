@@ -1,16 +1,17 @@
-# Script di Backup Automatico di /home/xiaolong
+# 🧩 Richiesta
 
-Questo script consente di creare automaticamente backup compressi della cartella `/home/xiaolong` all'interno della directory `/opt/backup`.
+**Obiettivo:**  
+Realizzare un sistema che effettui automaticamente il backup della **home di un utente** e lo salvi nella directory `/opt/backup`.
+
+---
+
+# 💾 Script di Backup Automatico
+
+Questo sistema esegue backup compressi della cartella `/home/xiaolong` e li salva nella directory `/opt/backup`. Vengono mantenuti solo gli ultimi 7 backup.
+
+---
 
 ## 🛠️ Requisiti
 
 - Sistema Linux/Unix
-- Privilegi di amministratore (root)
-- Directory di destinazione: `/opt/backup`
-
----
-
-## 📁 Creazione della directory di backup
-
-```bash
-sudo mkdir -p /opt/backup
+- Privilegi di amministratore (
